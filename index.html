@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TrackMe - Panel Remoto</title>
     <style>
         body {
@@ -90,14 +91,14 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc, onSnapshot, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // CONFIGURACIÓN EXTRAÍDA DE google-services.json
+        // Configuración de Firebase para la web (tomada de la consola)
         const firebaseConfig = {
-            apiKey: process.env.TRACKME_API_KEY,
-            authDomain: "trackmeapp-489819.firebaseapp.com",
-            projectId: "trackmeapp-489819",
-            storageBucket: "trackmeapp-489819.firebasestorage.app",
-            messagingSenderId: "1022569253805",
-            appId: "1:1022569253805:android:6812d4c848791ca41bef24"
+            apiKey: "AIzaSyD2BgbRiVMeKU4gL_uz1zKVOTlRZuZgrIY",
+            authDomain: "trackmeremote-5bad6.firebaseapp.com",
+            projectId: "trackmeremote-5bad6",
+            storageBucket: "trackmeremote-5bad6.firebasestorage.app",
+            messagingSenderId: "221331743943",
+            appId: "1:221331743943:web:0b081ed97370d922b1cae2"
         };
 
         const app = initializeApp(firebaseConfig);
