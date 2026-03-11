@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,19 +16,31 @@
             height: 100vh;
             margin: 0;
         }
+
         .card {
             background-color: #1e1e1e;
             padding: 2.5rem;
             border-radius: 20px;
-            box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
             text-align: center;
             width: 100%;
             max-width: 420px;
             border: 1px solid #333;
         }
-        h1 { color: #ffd600; margin-bottom: 0.5rem; font-size: 1.8rem; }
-        p { color: #9e9e9e; font-size: 0.95rem; margin-bottom: 2.5rem; line-height: 1.4; }
-        
+
+        h1 {
+            color: #ffd600;
+            margin-bottom: 0.5rem;
+            font-size: 1.8rem;
+        }
+
+        p {
+            color: #9e9e9e;
+            font-size: 0.95rem;
+            margin-bottom: 2.5rem;
+            line-height: 1.4;
+        }
+
         #btnRequest {
             background-color: #00e676;
             color: #000;
@@ -42,9 +55,24 @@
             text-transform: uppercase;
             letter-spacing: 1px;
         }
-        #btnRequest:hover { background-color: #00c853; transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0,230,118,0.3); }
-        #btnRequest:active { transform: translateY(0); }
-        #btnRequest:disabled { background-color: #424242; color: #757575; cursor: not-allowed; transform: none; box-shadow: none; }
+
+        #btnRequest:hover {
+            background-color: #00c853;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 230, 118, 0.3);
+        }
+
+        #btnRequest:active {
+            transform: translateY(0);
+        }
+
+        #btnRequest:disabled {
+            background-color: #424242;
+            color: #757575;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
 
         #status {
             margin-top: 2rem;
@@ -55,12 +83,37 @@
             line-height: 1.5;
             animation: fadeIn 0.4s ease;
         }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .info { background-color: rgba(13, 71, 161, 0.2); color: #90caf9; border: 1px solid #1565c0; }
-        .success { background-color: rgba(27, 94, 32, 0.2); color: #a5d6a7; border: 1px solid #2e7d32; }
-        .error { background-color: rgba(183, 28, 28, 0.2); color: #ef9a9a; border: 1px solid #c62828; }
-        
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .info {
+            background-color: rgba(13, 71, 161, 0.2);
+            color: #90caf9;
+            border: 1px solid #1565c0;
+        }
+
+        .success {
+            background-color: rgba(27, 94, 32, 0.2);
+            color: #a5d6a7;
+            border: 1px solid #2e7d32;
+        }
+
+        .error {
+            background-color: rgba(183, 28, 28, 0.2);
+            color: #ef9a9a;
+            border: 1px solid #c62828;
+        }
+
         .loader {
             border: 3px solid #333;
             border-top: 3px solid #00e676;
@@ -72,17 +125,27 @@
             vertical-align: middle;
             margin-right: 10px;
         }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
     </style>
 </head>
+
 <body>
 
     <div class="card">
         <h1>TrackMe Remote</h1>
         <p>Haz clic para solicitar que el dispositivo móvil envíe el historial de coordenadas actual a tu email.</p>
-        
+
         <button id="btnRequest">Solicitar Envío Ahora</button>
-        
+
         <div id="status"></div>
     </div>
 
@@ -93,12 +156,12 @@
 
         // Configuración de Firebase para la web (tomada de la consola)
         const firebaseConfig = {
-            apiKey: "AIzaSyD2BgbRiVMeKU4gL_uz1zKVOTlRZuZgrIY",
+            apiKey: "AIzaSyCIY6CtkPLoeLHYiUh9jybT66RbB04LuyA",
             authDomain: "trackmeremote-5bad6.firebaseapp.com",
             projectId: "trackmeremote-5bad6",
             storageBucket: "trackmeremote-5bad6.firebasestorage.app",
             messagingSenderId: "221331743943",
-            appId: "1:221331743943:web:0b081ed97370d922b1cae2"
+            appId: "1:221331743943:web:0b081ed97370d922b1cae2" // Asegúrate de que este es el ID de tu App WEB en la consola
         };
 
         const app = initializeApp(firebaseConfig);
@@ -149,4 +212,5 @@
         });
     </script>
 </body>
+
 </html>
