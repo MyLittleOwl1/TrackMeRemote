@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrackMe - Panel Remoto</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #121212;
+            color: #e0e0e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .card {
+            background-color: #1e1e1e;
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+            text-align: center;
+            width: 100%;
+            max-width: 420px;
+            border: 1px solid #333;
+        }
+        h1 { color: #ffd600; margin-bottom: 0.5rem; font-size: 1.8rem; }
+        p { color: #9e9e9e; font-size: 0.95rem; margin-bottom: 2.5rem; line-height: 1.4; }
+        
+        #btnRequest {
+            background-color: #00e676;
+            color: #000;
+            border: none;
+            padding: 1.2rem 2rem;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        #btnRequest:hover { background-color: #00c853; transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0,230,118,0.3); }
+        #btnRequest:active { transform: translateY(0); }
+        #btnRequest:disabled { background-color: #424242; color: #757575; cursor: not-allowed; transform: none; box-shadow: none; }
+
+        #status {
+            margin-top: 2rem;
+            padding: 1.2rem;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            display: none;
+            line-height: 1.5;
+            animation: fadeIn 0.4s ease;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .info { background-color: rgba(13, 71, 161, 0.2); color: #90caf9; border: 1px solid #1565c0; }
+        .success { background-color: rgba(27, 94, 32, 0.2); color: #a5d6a7; border: 1px solid #2e7d32; }
+        .error { background-color: rgba(183, 28, 28, 0.2); color: #ef9a9a; border: 1px solid #c62828; }
+        
+        .loader {
+            border: 3px solid #333;
+            border-top: 3px solid #00e676;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h1>TrackMe Remote</h1>
+        <p>Haz clic para solicitar que el dispositivo móvil envíe el historial de coordenadas actual a tu email.</p>
+        
+        <button id="btnRequest">Solicitar Envío Ahora</button>
+        
+        <div id="status"></div>
+    </div>
+
+    <!-- Firebase SDK (Modular) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, onSnapshot, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // CONFIGURACIÓN EXTRAÍDA DE google-services.json
+        const firebaseConfig = {
+            apiKey: process.env.TRACKME_API_KEY,
+            authDomain: "trackmeapp-489819.firebaseapp.com",
+            projectId: "trackmeapp-489819",
+            storageBucket: "trackmeapp-489819.firebasestorage.app",
+            messagingSenderId: "1022569253805",
+            appId: "1:1022569253805:android:6812d4c848791ca41bef24"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const btn = document.getElementById('btnRequest');
+        const statusDiv = document.getElementById('status');
+
+        function showStatus(msg, type, showLoader = false) {
+            let html = showLoader ? '<div class="loader"></div>' : '';
+            statusDiv.innerHTML = html + msg;
+            statusDiv.className = type;
+            statusDiv.style.display = 'block';
+        }
+
+        btn.addEventListener('click', async () => {
+            btn.disabled = true;
+            showStatus("Enviando petición...", "info", true);
+
+            try {
+                // Creamos la orden en Firestore
+                const docRef = await addDoc(collection(db, "commands"), {
+                    type: "SEND_EMAIL",
+                    status: "PENDING",
+                    requested_at: Date.now()
+                });
+
+                showStatus("Petición recibida por Firebase. Esperando respuesta del móvil (máx. 15 min)...", "info", true);
+
+                // Escuchamos el cambio de estado del documento creado
+                onSnapshot(doc(db, "commands", docRef.id), (snapshot) => {
+                    if (snapshot.exists()) {
+                        const data = snapshot.data();
+                        if (data.status === "COMPLETED") {
+                            showStatus("✅ ¡ÉXITO! El historial ha sido enviado correctamente.", "success");
+                            btn.disabled = false;
+                        } else if (data.status === "FAILED") {
+                            showStatus("❌ ERROR: " + (data.error || "La app no pudo procesar el envío."), "error");
+                            btn.disabled = false;
+                        }
+                    }
+                });
+
+            } catch (e) {
+                showStatus("Error de conexión: " + e.message, "error");
+                btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
